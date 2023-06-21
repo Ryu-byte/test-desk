@@ -63,30 +63,6 @@ export default {
       item
     }
   },
-  // data() {
-  //   return {
-  //     item: { ...this.initialItem },
-  //     isEditing: false,
-  //   };
-  // }, methods: {
-  //   updateItem() {
-  //     this.$store.commit('updateItem', {
-  //       id: this.item.id,
-  //       completed: this.item.completed,
-  //       title: this.item.title
-  //     });
-  //     this.isEditing = false;
-  //   }, deleteItem(id) {
-  //     this.$store.commit('deleteItem', { id });
-  //   }, changeCheck() {
-  //     this.item.completed = !this.item.completed;
-  //     this.$store.commit('updateItem', {
-  //       id: this.item.id,
-  //       completed: this.item.completed,
-  //       title: this.item.title
-  //     });
-  //   }
-  // }
 }
 </script>
 
