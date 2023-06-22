@@ -1,28 +1,24 @@
 <template>
   <div class="list">
-    <ToDoInput />
+    <TaskInput />
     <TaskItems />
   </div>
 </template>
 
-<script>
+<script setup>
 
-import {useStore} from "vuex";
-import ToDoInput from "@/components/TaskInput";
 import TaskItems from "@/components/TaskItems";
+import TaskInput from "@/components/TaskInput";
 
-export default {
-  components: {TaskItems, ToDoInput},
-  setup() {
-    const store = useStore();
-
-    return {
-      store,
-    }
-  },
-}
 </script>
 
 <style scoped>
-
+.list {
+  max-width: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 40px auto;
+}
 </style>

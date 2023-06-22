@@ -1,40 +1,27 @@
 <template>
-  <div class="container">
-    <div id="to-do-items">
+    <div class="to-do-items">
       <p v-if="totalItems === 0">
-        Sorry, you don't create any tasks :(
-        Do you want to plan something?)
+        The list of tasks is currently empty...
       </p>
-      <TaskItem v-for="item in items" :key="item.id" :initialItem="item" />
+      <TaskItem v-for="item in items" :key="item.id" :initialItem="item"/>
     </div>
-  </div>
 </template>
 
-<script>
+<script setup>
 
 import {useStore} from 'vuex';
 import TaskItem from "@/components/TaskItem";
 import {computed} from "vue";
-export default {
-  name: "TaskItems",
-  components: {TaskItem},
-  setup() {
-    const store = useStore();
-    const totalItems = computed(() => store.getters.totalItems);
-    const items = computed(() => store.getters.items);
-    return {
-      totalItems,
-      items
-    }
-  }
-}
+
+const store = useStore();
+const totalItems = computed(() => store.getters.totalItems);
+const items = computed(() => store.getters.items);
+
 </script>
 
 <style scoped>
-#to-do-items {
+.to-do-items {
   padding: 20px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 100%;
 }
 </style>

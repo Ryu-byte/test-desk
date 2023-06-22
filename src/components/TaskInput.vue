@@ -1,97 +1,64 @@
 <template>
-  <div id="to-do-input">
-    <input type="text" placeholder="Add thing to do" id="input" v-model="title" v-on:keyup.enter="addItem">
-    <button class="reset-button custom-button" id='butAdd' v-on:click="addItem">Add Task</button>
+  <div class="to-do-input">
+    <input type="text" placeholder="Add what you want to plan" id="input" class="add-item" v-model="title" v-on:keyup.enter="addItem">
+    <VueUiButton v-on:click="addItem" text="Add" class="add-button"/>
   </div>
 </template>
 
-<script>
+<script setup>
 import {useStore} from "vuex";
 import {ref} from "vue";
+import { uuid } from 'vue-uuid';
+import VueUiButton from "@/components/ui/VueUiButton";
 
-export default {
-  name: 'ToDoInput',
-  props: {
-    value: {
-      type: String,
-      default: ""
-    }
-  },
-  setup() {
-    const store = useStore();
-    let title = ref();
-    const addItem = () => {
-      if (title.value.trim() === '') {
-        return;
-      }
-      store.commit('addItem', {
-        title: title.value,
-        completed: false,
-        id: store.state.items.length + 1
-      });
-      title.value = '';
-    }
-
-    return {
-      addItem,
-      title
-    }
+const store = useStore();
+const title = ref("");
+const addItem = () => {
+  if (title.value.trim() === '') {
+    return;
   }
+  store.commit('addItem', {
+    title: title.value,
+    completed: false,
+    id: uuid.v4()
+  });
+  title.value = '';
 }
+
 </script>
 
 <style scoped>
-#to-do-input {
+
+.to-do-input {
   height: 40px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
 }
 
-input {
-  height: 20px;
-  margin: 0;
+.add-item {
+  height: 38px;
+  margin-right: 5px;
   border: none;
-  border-radius: 0;
-  width: 500px;
-  padding: 10px;
+  border-radius: 5px;
   font-size: 16px;
-  height: 100%;
   outline: none;
+  width: 100%;
 }
 
-.reset-button {
-  border-width: 0;
-  font-family: inherit;
-  font-size: inherit;
-  font-style: inherit;
-  font-weight: inherit;
-  line-height: inherit;
-  padding: 0;
-}
-
-.custom-button {
-  height: 100%;
-  font-size: 16px;
-  width: 200px;
-  background: #d9d9d9;
-  color: #555;
-  cursor: pointer;
+.add-button {
+  background: #00ff9794;
+  color:floralwhite;
+  padding: 0 10px;
 }
 
 @media screen and (max-width: 600px) {
-  #to-do-input {
+  .to-do-input {
     flex-direction: column;
     height: 80px;
   }
 
   input {
     width: 100%;
-  }
-
-  .custom-button {
-    width: 100%;
-
   }
 
 }

@@ -1,92 +1,57 @@
 <template>
   <div class="to-do-item">
     <div class="item-left">
-      <input type="checkbox" v-bind:checked="item.completed" v-on:change="changeCheck" />
+      <input type="checkbox" v-bind:checked="item.completed" v-on:change="changeCheck"/>
     </div>
     <input class="item" v-bind:class="{ completed: item.completed }" v-bind:disabled="!isEditing" v-model="item.title"
            v-on:keyup.enter="updateItem">
     <div class="item-right">
-      <i class="fas fa-edit green" @click="isEditing = true">aaa</i>
-      {{isEditing}}
-      <i class="fas fa-trash red" @click="deleteItem(item.id)">bbb</i>
+      <VueUiButton class="edit-button" @click="isEditing = true" text="Edit"/>
+      <VueUiButton class="remove-button" @click="deleteItem(item.id)" text="Del"/>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import {useStore} from "vuex";
 import {computed, ref} from "vue";
+import VueUiButton from "@/components/ui/VueUiButton";
 
-export default {
-  name: 'TaskItem',
-  props: {
-    initialItem: {
-      type: Object,
-      required: true
-    }
+const props = defineProps({
+  initialItem: {
+    type: Object,
+    required: true
+  }
+});
+const emit = defineEmits(["updateItem"]);
+const store = useStore();
+const isEditing = ref(false)
+const item = computed({
+  get() {
+    return props.initialItem;
   },
-  setup(props, {emit}) {
-    const store = useStore();
-    const isEditing = ref(false)
-    let item = computed({
-      get() {
-        return props.initialItem;
-      },
-      set(value) {
-        emit("updateItem", value);
-      },
-    });
-   const updateItem = () => {
-     store.commit('updateItem', {
-        id: item.value.id,
-        completed: item.value.completed,
-        title: item.value.title
-      });
-     isEditing.value = false;
-    }
-    const deleteItem = (id) => {
-      store.commit('deleteItem', { id });
-    }
-    const changeCheck =() => {
-      item.value.completed = !item.value.completed;
-      store.commit('updateItem', {
-        id: item.value.id,
-        completed: item.value.completed,
-        title: item.value.title
-      });
-    }
-    return {
-      updateItem,
-      deleteItem,
-      isEditing,
-      changeCheck,
-      item
-    }
+  set(value) {
+    emit("updateItem", value);
   },
-  // data() {
-  //   return {
-  //     item: { ...this.initialItem },
-  //     isEditing: false,
-  //   };
-  // }, methods: {
-  //   updateItem() {
-  //     this.$store.commit('updateItem', {
-  //       id: this.item.id,
-  //       completed: this.item.completed,
-  //       title: this.item.title
-  //     });
-  //     this.isEditing = false;
-  //   }, deleteItem(id) {
-  //     this.$store.commit('deleteItem', { id });
-  //   }, changeCheck() {
-  //     this.item.completed = !this.item.completed;
-  //     this.$store.commit('updateItem', {
-  //       id: this.item.id,
-  //       completed: this.item.completed,
-  //       title: this.item.title
-  //     });
-  //   }
-  // }
+});
+const updateItem = () => {
+  store.commit('updateItem', {
+    id: item.value.id,
+    completed: item.value.completed,
+    title: item.value.title
+  });
+  isEditing.value = false;
+}
+const deleteItem = (id) => {
+  store.commit('deleteItem', {id});
+}
+const changeCheck = () => {
+  item.value.completed = !item.value.completed;
+  store.commit('updateItem', {
+    id: item.value.id,
+    completed: item.value.completed,
+    title: item.value.title
+  });
 }
 </script>
 
@@ -94,29 +59,23 @@ export default {
 .to-do-item {
   margin-bottom: 10px;
   position: relative;
-  transition: transform .5s ease-in-out;
-  width: 500px;
-}
-
-.to-do-item:hover {
-  transform: scale(1.1, 1.1);
+  display: flex;
+  width: 100%;
 }
 
 input.item {
-  width: 100%;
   padding: 12px 15px 12px 35px;
   font-size: 20px;
-  border: none;
-  box-shadow: 6px 6px 8px rgb(112, 231, 159);
-  border-radius: 20px 0 20px 0;
-  border: 1px solid #80bdab;
+  border-radius: 20px;
+  border: 1px solid lightgray;
   color: black;
   outline: none;
+  width: 100%;
 }
 
 input.completed {
   text-decoration: line-through;
-  color: #0075FF;
+  color: #007bff;
 }
 
 .item-right {
@@ -131,37 +90,20 @@ input.completed {
 
 
 .item-left {
-
   position: absolute;
   top: 50%;
   left: 0%;
   transform: translate(50%, -50%);
 }
 
-.item-left input {
-  border-radius: 50%;
-
+.edit-button {
+  background: #0093ff;
+  color: wheat;
+  margin-right: 5px;
 }
 
-i {
-  cursor: pointer;
-  transition: all .2s ease-in-out;
-}
-
-i.green:hover {
-  color: #4CAF50;
-}
-
-i.red:hover {
-  color: #f44336;
-}
-
-i {
-  margin-right: 2px;
-}
-
-i:last-of-type {
-  margin-right: 0;
+.remove-button {
+  background: red;
 }
 
 @media screen and (max-width: 600px) {
